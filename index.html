@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <!-- Yourday, Shaby Ganti dengan judul yang kamu mau -->
+    <title>Yourday, Shaby</title>
+    <!-- Google Fonts: Chewy -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+    <style>
+        /* RESET - PAKAI PALETTE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #F7EEED;
+            --soft-pink: #FAE6E7;
+            --light-pink: #F7D1D8;
+            --medium-pink: #F4BBC9;
+            --text-pink: #F6A6BB;
+        }
+
+        body {
+            font-family: 'Chewy', cursive;
+            background-color: var(--cream);
+            /* GANTI URL BACKGROUND DI BAWAH INI DENGAN LINK GAMBAR KAMU */
+            background-image: url('https://files.catbox.moe/s8a9od.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-pink);
+            padding: 10px;
+        }
+
+        /* mobile wrapper */
+        .mobile-frame {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        /* pages */
+        .page {
+            display: none;
+            width: 100%;
+            background-color: rgba(247, 238, 237, 0.85);
+            backdrop-filter: blur(4px);
+            border-radius: 48px 48px 30px 30px;
+            padding: 28px 18px 32px 18px;
+            border: 4px solid var(--medium-pink);
+            box-shadow: 0 10px 0 var(--light-pink), 0 15px 25px rgba(0,0,0,0.1);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* semua teks pake warna text-pink */
+        h1, h2, p, span, div, .btn, .comment, .letter-box {
+            color: var(--text-pink);
+        }
+
+        /* tombol */
+        .btn {
+            font-family: 'Chewy', cursive;
+            background-color: var(--soft-pink);
+            border: none;
+            border-bottom: 5px solid var(--light-pink);
+            color: var(--text-pink);
+            padding: 14px 20px;
+            font-size: 1.6rem;
+            border-radius: 40px;
+            box-shadow: 0 4px 0 var(--medium-pink);
+            cursor: pointer;
+            transition: all 0.07s;
+            width: 100%;
+            max-width: 240px;
+            margin: 16px auto;
+            display: block;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            border-bottom-width: 2px;
+        }
+
+        .btn.small {
+            font-size: 1.3rem;
+            padding: 10px 16px;
+            max-width: 180px;
+        }
+
+        /* typography */
+        h1 {
+            font-size: 2.1rem;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            font-weight: normal;
+            word-break: break-word;
+            text-shadow: 2px 2px 0 var(--soft-pink);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 15px 0;
+            font-weight: normal;
+        }
+
+        p {
+            font-size: 1.3rem;
+            margin: 12px 0;
+        }
+
+        .friend-name {
+            color: var(--light-pink);
+            text-shadow: 1px 1px 0 var(--soft-pink);
+        }
+
+        /* CAKE PNG */
+        .cake-img {
+            width: 180px;
+            height: auto;
+            margin: 20px auto 15px;
+            display: block;
+            filter: drop-shadow(0 12px 10px rgba(0,0,0,0.1));
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .cake-img:active {
+            transform: scale(0.96);
+        }
+
+        /* POLAROID GRID */
+        .photo-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        .polaroid {
+            background-color: var(--soft-pink);
+            padding: 12px 12px 20px 12px;
+            border-radius: 20px 20px 10px 10px;
+            border: 3px solid var(--light-pink);
+            box-shadow: 0 6px 0 var(--medium-pink);
+            max-width: 150px;
+            flex: 1 1 auto;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid var(--text-pink);
+            display: block;
+            background-color: var(--cream);
+        }
+
+        .polaroid p {
+            font-size: 1.2rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* LIVE COMMENTS - SCROLLING ANIMASI (LANGSUNG JALAN) */
+        .comments-container {
+            background-color: var(--soft-pink);
+            border-radius: 40px;
+            padding: 20px 15px;
+            margin: 25px 0;
+            border: 4px dashed var(--light-pink);
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .comments-scroll {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* LANGSUNG JALAN, GA NUNGGU */
+            animation: scrollComments 15s linear infinite;
+            /* penting: mulai dari posisi 0 */
+            transform: translateY(0);
+        }
+
+        .comments-container:hover .comments-scroll {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollComments {
+            0% {
+                transform: translateY(0);
+            }
+            20% {
+                transform: translateY(0); /* nahan dulu biar kebaca */
+            }
+            100% {
+                transform: translateY(calc(-100% + 220px)); /* naik sampe abis */
+            }
+        }
+
+        .comment {
+            background-color: var(--cream);
+            border-radius: 25px;
+            padding: 12px 18px;
+            border: 2px solid var(--text-pink);
+            font-size: 1.1rem;
+            line-height: 1.4;
+            text-align: left;
+            box-shadow: 0 3px 0 var(--light-pink);
+            flex-shrink: 0;
+        }
+
+        .comment strong {
+            color: var(--light-pink);
+            font-weight: normal;
+            margin-right: 6px;
+        }
+
+        /* SURAT */
+        .letter-box {
+            background-color: var(--soft-pink);
+            border-radius: 40px 40px 20px 20px;
+            padding: 30px 20px;
+            border: 5px double var(--text-pink);
+            margin: 25px 0;
+            text-align: left;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            box-shadow: inset 0 0 0 5px var(--cream);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* audio hidden */
+        #bg-audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <!-- AUDIO (hidden) - GANTI URL -->
+        <audio id="bg-audio" src="https://files.catbox.moe/jrv7b4.mp3" preload="auto"></audio>
+
+        <!-- PAGE 1 - INTRO + CAKE -->
+        <div id="page1" class="page active">
+            <!-- Shabiel Ganti dengan nama temanmu -->
+            <h1>Hi, <span class="friend-name" id="friendName1">Shabiel</span>,<br>I have a surprise for you, ready for that?</h1>
+            <button class="btn" id="readyBtn">I'm ready!</button>
+
+            <!-- Cake section (hidden at start) -->
+            <div id="cakeSection" style="display: none;">
+                <!-- GANTI URL CAKE PNG DI BAWAH INI -->
+                <img src="https://files.catbox.moe/kvdiux.png" alt="birthday cake" class="cake-img" id="cakeImage">
+                <button class="btn small" id="blowBtn">blow the candle</button>
+                <p style="font-size: 1rem; margin-top: 5px; color: var(--text-pink);">(tap the cake)</p>
+            </div>
+        </div>
+
+        <!-- PAGE 2 - PHOTOS + LIVE COMMENTS -->
+        <div id="page2" class="page">
+            <!-- Shabiel Ganti dengan nama temanmu -->
+            <h1>Happy birthday, <span class="friend-name" id="friendName2">Shabiel</span>!</h1>
+
+            <!-- 4 PHOTOS POLAROID - GANTI URL FOTO DI BAWAH INI -->
+            <div class="photo-grid" id="photoGrid">
+                <!-- injected by js -->
+            </div>
+
+            <!-- LIVE COMMENTS SCROLLING (LANGSUNG JALAN) -->
+            <div class="comments-container">
+                <div class="comments-scroll" id="commentsScroll">
+                    <!-- akan diisi js -->
+                </div>
+            </div>
+
+            <button class="btn" id="readLetterBtn">read my letter</button>
+        </div>
+
+        <!-- PAGE 3 - LETTER -->
+        <div id="page3" class="page">
+            <h1>a letter for you</h1>
+            <!-- Once again, happy birthday, the love of my life. I love you beyond everything, let&#39;s make today become your wonderful day ever. I want to see your beautiful smile appear the whole day. Thank you so much for existing. Have a fabulous birthday, Sayangku. Ganti dengan isi surat (bisa pakai \n untuk baris baru) -->
+            <div class="letter-box" id="letterContent">
+                Once again, happy birthday, the love of my life. I love you beyond everything, let&#39;s make today become your wonderful day ever. I want to see your beautiful smile appear the whole day. Thank you so much for existing. Have a fabulous birthday, Sayangku.
+            </div>
+            <button class="btn small" id="backToStartBtn">← back to start</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // --- SEMUA PLACEHOLDER ADA DI SINI ---
+            
+            // Shabiel Ganti dengan nama temanmu
+            const FRIEND_NAME = "Shabiel";
+            
+            // images/photo_7568608989_1773563864.jpg, images/photo_7568608989_1773563865.jpg, images/photo_7568608989_1773563867.jpg, images/photo_7568608989_1773563868.jpg - Ganti dengan URL foto-foto
+            const PHOTO_URLS = [
+                "images/photo_7568608989_1773563864.jpg", // foto 1
+                "images/photo_7568608989_1773563865.jpg", // foto 2
+                "images/photo_7568608989_1773563867.jpg", // foto 3
+                "images/photo_7568608989_1773563868.jpg"  // foto 4
+            ];
+
+            // Once again, happy birthday, the love of my life. I love you beyond everything, let&#39;s make today become your wonderful day ever. I want to see your beautiful smile appear the whole day. Thank you so much for existing. Have a fabulous birthday, Sayangku. Ganti dengan isi surat (boleh pake \n untuk baris baru)
+            const LETTER = `Once again, happy birthday, the love of my life. I love you beyond everything, let&#39;s make today become your wonderful day ever. I want to see your beautiful smile appear the whole day. Thank you so much for existing. Have a fabulous birthday, Sayangku.`;
+
+            // LIVE COMMENTS (english, many)
+            const COMMENTS = [
+                { user: "Carter ganteng", msg: "Happy birthday! hope you have a great day." },
+                { user: "Jamie", msg: "happy birthday cutie" },
+                { user: "Sam", msg: "wish you all the best!!" },
+                { user: "Taylor", msg: "have fun and eat lots of cake" },
+                { user: "Jordan", msg: "you're amazing, happy bday" },
+                { user: "Casey", msg: "enjoy your special day" },
+                { user: "Riley", msg: "happy birthday from me" },
+                { user: "Quinn", msg: "hope all your wishes come true" },
+                { user: "Avery", msg: "you deserve all the happiness" },
+                { user: "Parker", msg: "happy level up" },
+                { user: "Morgan", msg: "have the best day ever!" },
+                { user: "Sydney", msg: "happy birthday gorgeous" },
+                { user: "Cameron", msg: "wish i was there!" },
+                { user: "Reese", msg: "so happy for you!!" }
+            ];
+
+            // --- DOM ELEMENTS ---
+            const page1 = document.getElementById('page1');
+            const page2 = document.getElementById('page2');
+            const page3 = document.getElementById('page3');
+            const readyBtn = document.getElementById('readyBtn');
+            const cakeSection = document.getElementById('cakeSection');
+            const blowBtn = document.getElementById('blowBtn');
+            const cakeImage = document.getElementById('cakeImage');
+            const readLetterBtn = document.getElementById('readLetterBtn');
+            const backBtn = document.getElementById('backToStartBtn');
+            const audio = document.getElementById('bg-audio');
+            const friendSpans = [document.getElementById('friendName1'), document.getElementById('friendName2')];
+            const photoGrid = document.getElementById('photoGrid');
+            const commentsScroll = document.getElementById('commentsScroll');
+            const letterDiv = document.getElementById('letterContent');
+
+            // --- HELPER FUNCTIONS ---
+            function setFriendName(name) {
+                friendSpans.forEach(el => { if(el) el.textContent = name; });
+            }
+
+            function showPage(pageNum) {
+                page1.classList.remove('active');
+                page2.classList.remove('active');
+                page3.classList.remove('active');
+                if (pageNum === 1) page1.classList.add('active');
+                else if (pageNum === 2) page2.classList.add('active');
+                else if (pageNum === 3) page3.classList.add('active');
+            }
+
+            // render photos
+            function renderPhotos() {
+                photoGrid.innerHTML = '';
+                PHOTO_URLS.forEach((url, idx) => {
+                    const polaroid = document.createElement('div');
+                    polaroid.className = 'polaroid';
+                    
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `photo ${idx+1}`;
+                    img.loading = 'lazy';
+                    
+                    const caption = document.createElement('p');
+                    caption.textContent = '📸 cute!';
+                    
+                    polaroid.appendChild(img);
+                    polaroid.appendChild(caption);
+                    photoGrid.appendChild(polaroid);
+                });
+            }
+
+            // render comments with duplication for smooth scroll
+            function renderComments() {
+                commentsScroll.innerHTML = '';
+                // duplicate comments 5x biar panjang dan smooth
+                for (let copy = 0; copy < 5; copy++) {
+                    COMMENTS.forEach(c => {
+                        const div = document.createElement('div');
+                        div.className = 'comment';
+                        div.innerHTML = `<strong>${c.user}:</strong> ${c.msg}`;
+                        commentsScroll.appendChild(div);
+                    });
+                }
+            }
+
+            // confetti
+            function triggerConfetti() {
+                for (let i = 0; i < 30; i++) {
+                    const conf = document.createElement('div');
+                    conf.textContent = ['🎉', '🎊', '✨', '🌸', '🎂'][Math.floor(Math.random() * 5)];
+                    conf.style.position = 'fixed';
+                    conf.style.left = Math.random() * 100 + '%';
+                    conf.style.top = '-10px';
+                    conf.style.fontSize = (20 + Math.random() * 20) + 'px';
+                    conf.style.zIndex = 9999;
+                    conf.style.pointerEvents = 'none';
+                    conf.style.animation = `fall ${2 + Math.random() * 3}s linear forwards`;
+                    document.body.appendChild(conf);
+                    setTimeout(() => conf.remove(), 5000);
+                }
+                // add keyframe if not exist
+                if (!document.getElementById('confettiKey')) {
+                    const style = document.createElement('style');
+                    style.id = 'confettiKey';
+                    style.innerHTML = `@keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }`;
+                    document.head.appendChild(style);
+                }
+            }
+
+            // blow action
+            function blowAction() {
+                triggerConfetti();
+                // move to page2 after delay
+                setTimeout(() => {
+                    showPage(2);
+                }, 800);
+            }
+
+            // --- INIT ---
+            setFriendName(FRIEND_NAME);
+            renderPhotos();
+            renderComments();
+            
+            // Set letter content
+            letterDiv.innerHTML = LETTER.replace(/\n/g, '<br>');
+
+            // --- EVENT LISTENERS ---
+            readyBtn.addEventListener('click', () => {
+                audio.play().catch(e => console.log('autoplay need interaction'));
+                cakeSection.style.display = 'block';
+                readyBtn.style.display = 'none';
+            });
+
+            // blow options
+            blowBtn.addEventListener('click', blowAction);
+            cakeImage.addEventListener('click', blowAction);
+
+            readLetterBtn.addEventListener('click', () => {
+                showPage(3);
+            });
+
+            backBtn.addEventListener('click', () => {
+                // reset page 1
+                showPage(1);
+                cakeSection.style.display = 'none';
+                readyBtn.style.display = 'block';
+                audio.pause();
+                audio.currentTime = 0;
+            });
+
+            // ensure audio can play
+            document.body.addEventListener('touchstart', function initAudio() {
+                audio.load();
+                document.body.removeEventListener('touchstart', initAudio);
+            }, { once: true });
+
+        })();
+    </script>
+</body>
+</html>
